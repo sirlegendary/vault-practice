@@ -1,5 +1,5 @@
-api_addr = "https://${public_ip}:8200"
-cluster_addr = "https://${public_ip}:8201"
+api_addr = "http://${public_ip}:8200"
+cluster_addr = "http://${public_ip}:8201"
 cluster_name = "${application_name}-${aws_region}"
 
 storage "raft" {
@@ -11,12 +11,10 @@ storage "raft" {
 }
 
 listener "tcp" {
- address = "0.0.0.0:8200"
- cluster_address = "0.0.0.0:8201"
- tls_disable = 1
- tls_cert_file = "/opt/vault/tls/ca.crt.pem"
- tls_key_file = "/opt/vault/tls/vault.key.pem"
- tls_client_ca_file = "/opt/vault/tls/vault-ca.pem"
+  address       = "0.0.0.0:8200"
+  tls_disable = "true"
+  tls_cert_file = "/opt/vault/tls/tls.crt"
+  tls_key_file  = "/opt/vault/tls/tls.key"
 }
 
 seal "awskms" {

@@ -16,7 +16,7 @@ resource "aws_s3_bucket_acl" "bucket_acl" {
 data "template_file" "vault_raft_config_file" {
   template = file("${path.module}/files/${var.vault_config_file}")
   vars = {
-    public_ip        = aws_instance.server.public_ip
+    public_ip        = aws_instance.server.public_dns
     application_name = var.application_name
     aws_region       = var.aws_region
     kms_key_id       = aws_kms_key.kms.key_id
@@ -29,6 +29,9 @@ data "template_file" "vault_service" {
 
 data "template_file" "vault_setup_script" {
   template = file("${path.module}/files/${var.vault_setup_script}")
+  vars = {
+    public_ip = aws_instance.server.public_dns
+  }
 }
 
 resource "aws_s3_object" "vault_raft_config_file" {

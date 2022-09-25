@@ -22,7 +22,7 @@ data "template_file" "userdata" {
 }
 
 resource "aws_instance" "server" {
-  ami                         = "ami-0fa727183db909e1b"
+  ami                         = data.aws_ami.latest-ubuntu.id
   instance_type               = var.instancetype
   key_name                    = aws_key_pair.public_key.key_name
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.name

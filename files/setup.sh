@@ -12,20 +12,31 @@
 # # Set the file permissions of the private key file to be readable only by the Vault service
 # sudo chmod 0640 /opt/vault/tls/vault.key.pem
 
-# Enable the systemd vault.service unit to allow the Vault service to start
-sudo systemctl enable vault.service
-
-# Start the Vault service
-sudo systemctl start vault.service
-
 # To ensure TLS connection can be validated, first set the VAULT_CACERT environment variable to the path of the CA root certificate
-export VAULT_CACERT=/opt/vault/tls/ca.crt.pem
+# export VAULT_CACERT=/opt/vault/tls/ca.crt.pem
 
-# set vault address
-export VAULT_ADDR=http://$(hostname):8200 >> ~/.bashrc
-source ~/.bashrc
+systemctl_setup () {
+    echo "##### systemctl setup #####"
+    # Enable the systemd vault.service unit to allow the Vault service to start
+    sudo systemctl enable vault.service
 
-export VAULT_ADDR=http://$(hostname):8200
+    # Start the Vault service
+    sudo systemctl start vault.service
+} 
 
-vault -autocomplete-install
-complete -C /usr/bin/vault vault
+set_vault_exports () {
+    echo "##### set exports #####"
+    # set vault address
+    echo "export VAULT_ADDR=http://${public_ip}:8200" >> /etc/environment
+    source /etc/environment
+}
+
+vault_auto_complete () {
+    echo "##### Install vault auto complete #####"
+    vault -autocomplete-install || true
+    complete -C /usr/bin/vault vault || true
+}
+
+systemctl_setup
+set_vault_exports 
+#vault_auto_complete 
