@@ -16,6 +16,9 @@ data "aws_ami" "latest-ubuntu" {
 
 data "template_file" "userdata" {
   template = file("${path.module}/userdata.sh")
+  vars = {
+    "bucket" = aws_s3_bucket.bucket.id
+  }
 }
 
 resource "aws_instance" "server" {
