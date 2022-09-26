@@ -6,3 +6,7 @@
 output "ssh_login" {
   value = "ssh ubuntu@${aws_instance.server.public_ip}"
 }
+
+output "vault_ui" {
+  value = "http://${aws_instance.server.public_dns}:8200/ui"
+}
